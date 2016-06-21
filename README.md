@@ -18,6 +18,10 @@ There is an failover (in case user reject to share location) which represents th
 - Babel
 - Webpack
 
+#### How to make it work
+
+First obtain Flickr api key and populate it into /configs/apiConfigs.js. Then do 'npm install' so that all dependency modules are being installed. Last thing is to run 'npm start' which is going to run the app in dev mode and if everything went cool you will be able to access the 'http://localhost:8080'...
+
 #### Projects Homepage
 
 [makemy.org](http://makemy.org/)
