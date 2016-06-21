@@ -5,7 +5,7 @@ import Container from './components/container/container.jsx';
 import DayTime from './lib/DayTime.js';
 require('core-js'); // polyfills for ES6 methods
 
-(function(window){
+(function(){
   // init function
   function init(period) {
     // define routes and render the app
@@ -26,4 +26,4 @@ require('core-js'); // polyfills for ES6 methods
     }
   });
   dayTime.partOfDay();
-}(window));
+}());
