@@ -3,8 +3,8 @@ var ApiConfigs = {
   flickr: {
       api: {
         url: 'https://api.flickr.com/services/rest/',
-        key: '5f5604b5cc9dcd352cfa4745cabc43d9',
-        secret: 'ffc9435c136b0399'
+        key: '',
+        secret: ''
       },
       groupId: '1563508@N21' // nature
   },
