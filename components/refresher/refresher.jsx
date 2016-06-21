@@ -22,6 +22,6 @@ class Refresher extends React.Component {
       </div>
     );
   }
-}
+};
 
 export default Refresher;

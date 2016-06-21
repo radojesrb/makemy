@@ -19,6 +19,6 @@ class Facts extends React.Component {
       </div>
     );
   }
-}
+};
 
 export default Facts;

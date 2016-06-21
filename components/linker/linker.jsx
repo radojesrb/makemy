@@ -21,6 +21,6 @@ class Linker extends React.Component {
       </div>
     );
   }
-}
+};
 
 export default Linker;

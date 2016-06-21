@@ -30,6 +30,6 @@ class Title extends React.Component {
       </div>
     );
   }
-}
+};
 
 export default Title;

@@ -18,6 +18,6 @@ class Counter extends React.Component {
       </div>
     );
   }
-}
+};
 
 export default Counter;

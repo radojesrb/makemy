@@ -1,14 +1,14 @@
 {
   "name": "makemy",
-  "version": "0.0.1",
+  "version": "1.0.1",
   "description": "Make My...",
   "main": "app.js",
   "scripts": {
     "start": "webpack-dev-server --hot",
     "deploy": "NODE_ENV=production webpack -p --config webpack.config.prod.js"
   },
-  "author": "Dusan Radojevic",
-  "license": "ISC",
+  "author": "Dusan Radojevic <radojevic_dusan@yahoo.com>",
+  "license": "MIT",
   "dependencies": {
     "babel-core": "^6.9.1",
     "babel-loader": "^6.2.4",
@@ -25,5 +25,9 @@
   "devDependencies": {
     "css-loader": "^0.23.1",
     "style-loader": "^0.13.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/radojesrb/makemy.git"
   }
 }
