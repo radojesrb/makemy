@@ -28,4 +28,5 @@ First obtain Flickr api key and populate it into /configs/apiConfigs.js. Then do
 
 #### ToDo
 
-Wrapp the app in an Google Chrome extension (so that it loads on opening the new tab).
+- Wrapp the app in an Google Chrome extension (so that it loads on opening the new tab).
+- Provide the possibility for easy downloading of images that Owner has allowed to be downloadable (Flickr api returns this info).
