@@ -16,7 +16,7 @@ require('core-js'); // polyfills for ES6 methods
       </Router>
     ), document.getElementById('make-my'));
   }
-
+  
   // determine part of the day on page load
   var dayTime = new DayTime({
     date: new Date(),

@@ -1,9 +1,10 @@
 import React from 'react';
 import { hashHistory } from 'react-router';
-import classNames from 'classnames';
+import Background from '../background/background.jsx';
 import Title from '../title/title.jsx';
 import Counter from '../counter/counter.jsx';
 import Refresher from '../refresher/refresher.jsx';
+import Downloader from '../downloader/downloader.jsx';
 import Linker from '../linker/linker.jsx';
 import Facts from '../facts/facts.jsx';
 import Flickr from '../../lib/Flickr.js';
@@ -26,8 +27,11 @@ class Container extends React.Component {
       photo: { // property which holds all the data needed for the currently selected photo
         id: this.props.routeParams.photoId,
         info: {},
-        src: ''
+        src: '',
+        downloadable: false
       },
+      dataset: {},
+      seenPhotos: [],
       triviaFact: '',
       partOfDay: this.props.route.partOfDay,
       currentPage: location.hash // this is being used for habdling 'hashHistory' custom pseudo callback Helper method. See the reference in /helpers/helpers.js 'onLocationChange'
@@ -35,7 +39,8 @@ class Container extends React.Component {
 
     // instantiate the Flickr class
     this.photos = new Flickr({
-      apiKey: ApiConfigs.flickr.api.key
+      apiKey: ApiConfigs.flickr.api.key,
+      preload: true
     });
 
     // instantiate the Trivia class
@@ -56,7 +61,8 @@ class Container extends React.Component {
       photo: {
         id: newProps.routeParams.photoId,
         info: this.state.photo.info,
-        src: this.state.photo.src
+        src: this.state.photo.src,
+        downloadable: this.state.photo.downloadable
       },
       currentPage: location.hash
     });
@@ -103,6 +109,25 @@ class Container extends React.Component {
     });
   }
 
+  updatePhotoState(id, info, src, size, downloadable) {
+    var me = this,
+        loadingFlag = me.state.isLoading;
+
+    if(size === 'large') {
+      loadingFlag = false;
+    }
+
+    me.setState({
+      isLoading: loadingFlag,
+      photo: {
+        id: id,
+        info: info,
+        src: src,
+        downloadable: downloadable
+      }
+    });
+  }
+
   // method that fetches the photo from Flickr
   getPhoto() {
     var me = this,
@@ -118,63 +143,34 @@ class Container extends React.Component {
         text: partOfDay,
         tags: partOfDay,
         group_id: ApiConfigs.flickr.groupId,
-        per_page: 100
+        per_page: 5
       }, function(img) {
         me.photos.getPhotoInfo(img.id, function(data) {
-          me.setState({
-            isLoading: false,
-            photo: {
-              id: img.id,
-              info: data.photo,
-              src: img.src
-            }
-          });
+          me.updatePhotoState(img.id, data.photo, img.src, img.size, !!+data.photo.usage.candownload);
         })
       });
     }
     // find one specific photo, in case of /photo/:photoId url being loaded
     else {
       me.photos.getSinglePhoto(photoId, function(img) {
-        var sizes = img.sizes.size;
-
-        // get the large size of the photo
-        var result = sizes.filter(function(obj) {
-          return obj.label == 'Large';
+        me.photos.imageLoader(img, photoId, function(img) {
+          me.photos.getPhotoInfo(photoId, function(data) {
+            me.updatePhotoState(photoId, data.photo, img.src, img.size, !!+data.photo.candownload)
+          })
         });
-        var imgSrc = result[0].source;
-
-        me.photos.getPhotoInfo(photoId, function(data) {
-          me.setState({
-            isLoading: false,
-            photo: {
-              id: photoId,
-              info: data.photo,
-              src: imgSrc
-            }
-          });
-        })
       });
     }
   }
 
   render() {
-    // configure the css classes for component. 'desaturate' subclass is added while the Flickr api fetchs new data
-    var cssClasses = classNames({
-      'page-bg': true,
-      'desaturate': this.state.isLoading
-    });
-
-    // set the photo as the component backgroundImage
-    var photoStyle = {
-      backgroundImage: 'url(' + this.state.photo.src + ')'
-    };
-
     return (
-      <div className={cssClasses} style={photoStyle}>
+      <div className='container'>
+        <Background isLoading={this.state.isLoading} photoSrc={this.state.photo.src} />
         <Title partOfDay={this.state.partOfDay} isLoading={this.state.isLoading} />
         <Counter viewNumber={this.state.photo.info.views} />
         <Refresher click={this.resetState.bind(this)} />
-        <Linker photoId={this.state.photo.id} />
+        <Downloader downloadable={this.state.photo.downloadable} photoSrc={this.state.photo.src} />
+        <Linker downloadable={this.state.photo.downloadable} photoId={this.state.photo.id} />
         <Facts content={this.state.triviaFact} />
       </div>
     );
